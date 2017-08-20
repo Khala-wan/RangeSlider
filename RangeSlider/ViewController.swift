@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         rangeSlider2.trackHighlightTintColor = UIColor.red
         rangeSlider2.curvaceousness = 0.0
         
-        view.addSubview(rangeSlider1)
+//        view.addSubview(rangeSlider1)
         view.addSubview(rangeSlider2)
         
         rangeSlider1.addTarget(self, action: #selector(ViewController.rangeSliderValueChanged(_:)), for: .valueChanged)
@@ -31,6 +31,7 @@ class ViewController: UIViewController {
             width: width, height: 31.0)
         rangeSlider2.frame = CGRect(x: margin + 20, y: 5 * margin + topLayoutGuide.length + 100,
             width: width - 40, height: 40)
+        rangeSlider2.lineWidth = 1
     }
     
     override func didReceiveMemoryWarning() {

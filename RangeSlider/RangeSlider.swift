@@ -122,10 +122,6 @@ public class RangeSlider: UIControl {
         }
     }
     
-    var gapBetweenThumbs: Double {
-        return 0.5 * Double(thumbWidth) * (maximumValue - minimumValue) / Double(bounds.width)
-    }
-    
     @IBInspectable public var trackTintColor: UIColor = UIColor(white: 0.9, alpha: 1.0) {
         didSet {
             trackLayer.setNeedsDisplay()
@@ -175,11 +171,23 @@ public class RangeSlider: UIControl {
         }
     }
     
-    fileprivate var previouslocation = CGPoint()
+    var minSpcaeValue:Double! {
+        didSet{
+            gapBetweenThumbs = minSpcaeValue/(maximumValue - minimumValue) * Double(bounds.width)
+        }
+    }
     
-    fileprivate let trackLayer = RangeSliderTrackLayer()
-    fileprivate let lowerThumbLayer = RangeSliderThumbLayer()
-    fileprivate let upperThumbLayer = RangeSliderThumbLayer()
+    var lineWidth:CGFloat?
+    
+    lazy var gapBetweenThumbs: Double = {
+        return 0.5 * Double(self.thumbWidth) * (self.maximumValue - self.minimumValue) / Double(self.bounds.width)
+    }()
+    
+    fileprivate var previouslocation = CGPoint()
+
+    let trackLayer = RangeSliderTrackLayer()
+    let lowerThumbLayer = RangeSliderThumbLayer()
+    let upperThumbLayer = RangeSliderThumbLayer()
     
     fileprivate var thumbWidth: CGFloat {
         return CGFloat(bounds.height)
@@ -225,8 +233,9 @@ public class RangeSlider: UIControl {
     func updateLayerFrames() {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
+        let height:CGFloat = lineWidth ?? self.bounds.height/3
+        trackLayer.frame = CGRect(x: 0, y: (bounds.height - height) * 0.5, width: bounds.width, height: height)
         
-        trackLayer.frame = bounds.insetBy(dx: 0.0, dy: bounds.height/3)
         trackLayer.setNeedsDisplay()
         
         let lowerThumbCenter = CGFloat(positionForValue(lowerValue))
