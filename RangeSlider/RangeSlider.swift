@@ -9,10 +9,10 @@
 import UIKit
 import QuartzCore
 
-class RangeSliderTrackLayer: CALayer {
+public class RangeSliderTrackLayer: CALayer {
     weak var rangeSlider: RangeSlider?
     
-    override func draw(in ctx: CGContext) {
+    override public func draw(in ctx: CGContext) {
         guard let slider = rangeSlider else {
             return
         }
@@ -36,7 +36,7 @@ class RangeSliderTrackLayer: CALayer {
     }
 }
 
-class RangeSliderThumbLayer: CALayer {
+public class RangeSliderThumbLayer: CALayer {
     
     var highlighted: Bool = false {
         didSet {
@@ -56,7 +56,7 @@ class RangeSliderThumbLayer: CALayer {
         }
     }
     
-    override func draw(in ctx: CGContext) {
+    override public func draw(in ctx: CGContext) {
         guard let slider = rangeSlider else {
             return
         }
@@ -185,9 +185,9 @@ public class RangeSlider: UIControl {
     
     fileprivate var previouslocation = CGPoint()
 
-    let trackLayer = RangeSliderTrackLayer()
-    let lowerThumbLayer = RangeSliderThumbLayer()
-    let upperThumbLayer = RangeSliderThumbLayer()
+    public let trackLayer = RangeSliderTrackLayer()
+    public let lowerThumbLayer = RangeSliderThumbLayer()
+    public let upperThumbLayer = RangeSliderThumbLayer()
     
     fileprivate var thumbWidth: CGFloat {
         return CGFloat(bounds.height)
