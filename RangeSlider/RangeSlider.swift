@@ -177,7 +177,7 @@ public class RangeSlider: UIControl {
         }
     }
     
-    var lineWidth:CGFloat?
+    public var lineWidth:CGFloat?
     
     lazy var gapBetweenThumbs: Double = {
         return 0.5 * Double(self.thumbWidth) * (self.maximumValue - self.minimumValue) / Double(self.bounds.width)
