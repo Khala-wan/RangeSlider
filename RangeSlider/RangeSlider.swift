@@ -240,7 +240,7 @@ public class RangeSlider: UIControl {
         let lowerThumbCenter = CGFloat(positionForValue(lowerValue))
         let upperThumbCenter = CGFloat(positionForValue(upperValue))
         
-        lowerThumbLayer.frame = CGRect(x: upperValue - lowerValue <= 100 && lowerThumbLayer.highlighted ? upperThumbCenter - thumbWidth/2.0 - 4 : lowerThumbCenter - thumbWidth/2.0, y: 0.0, width: thumbWidth, height: thumbWidth)
+        lowerThumbLayer.frame = CGRect(x: upperValue - lowerValue <= 100 && lowerThumbLayer.highlighted ? upperThumbCenter - thumbWidth/2.0 : lowerThumbCenter - thumbWidth/2.0, y: 0.0, width: thumbWidth, height: thumbWidth)
         lowerThumbLayer.setNeedsDisplay()
         
         
