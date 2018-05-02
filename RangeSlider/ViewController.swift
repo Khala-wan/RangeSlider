@@ -21,7 +21,11 @@ class ViewController: UIViewController {
 //        view.addSubview(rangeSlider1)
         view.addSubview(rangeSlider2)
         
-        rangeSlider1.addTarget(self, action: #selector(ViewController.rangeSliderValueChanged(_:)), for: .valueChanged)
+        rangeSlider2.addTarget(self, action: #selector(ViewController.rangeSliderValueChanged(_:)), for: .valueChanged)
+        rangeSlider2.maximumValue = 8000
+        rangeSlider2.minimumValue = 0
+        rangeSlider2.minSpcaeValue = 100
+        rangeSlider2.upperValue = 8000
     }
     
     override func viewDidLayoutSubviews() {

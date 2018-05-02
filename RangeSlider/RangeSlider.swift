@@ -30,7 +30,7 @@ public class RangeSliderTrackLayer: CALayer {
         // Fill the highlighted range
         ctx.setFillColor(slider.trackHighlightTintColor.cgColor)
         let lowerValuePosition = CGFloat(slider.positionForValue(slider.lowerValue))
-        let upperValuePosition = CGFloat(slider.positionForValue(slider.upperValue))
+        let upperValuePosition = CGFloat(slider.positionForValue(slider.upperValue)) + rangeSlider!.thumbWidth * 0.5
         let rect = CGRect(x: lowerValuePosition, y: 0.0, width: upperValuePosition - lowerValuePosition, height: bounds.height)
         ctx.fill(rect)
     }
@@ -171,7 +171,7 @@ public class RangeSlider: UIControl {
         }
     }
     
-    var minSpcaeValue:Double! {
+    var minSpcaeValue:Double = 100 {
         didSet{
             gapBetweenThumbs = minSpcaeValue/(maximumValue - minimumValue) * Double(bounds.width)
         }
@@ -243,14 +243,14 @@ public class RangeSlider: UIControl {
         lowerThumbLayer.setNeedsDisplay()
         
         let upperThumbCenter = CGFloat(positionForValue(upperValue))
-        upperThumbLayer.frame = CGRect(x: upperThumbCenter - thumbWidth/2.0, y: 0.0, width: thumbWidth, height: thumbWidth)
+        upperThumbLayer.frame = CGRect(x: upperThumbCenter + thumbWidth/2.0, y: 0.0, width: thumbWidth, height: thumbWidth)
         upperThumbLayer.setNeedsDisplay()
         
         CATransaction.commit()
     }
     
     func positionForValue(_ value: Double) -> Double {
-        return Double(bounds.width - thumbWidth) * (value - minimumValue) /
+        return Double(bounds.width - thumbWidth * 2) * (value - minimumValue) /
             (maximumValue - minimumValue) + Double(thumbWidth/2.0)
     }
     
@@ -279,16 +279,26 @@ public class RangeSlider: UIControl {
         
         // Determine by how much the user has dragged
         let deltaLocation = Double(location.x - previouslocation.x)
-        let deltaValue = (maximumValue - minimumValue) * deltaLocation / Double(bounds.width - bounds.height)
-        
+        let deltaValue = (maximumValue - minimumValue) * deltaLocation / Double(bounds.width - bounds.height * 2.5)
         previouslocation = location
+        
+        var lValue: Double = lowerValue
+        var uValue: Double = upperValue
         
         // Update the values
         if lowerThumbLayer.highlighted {
-            lowerValue = boundValue(lowerValue + deltaValue, toLowerValue: minimumValue, upperValue: upperValue - gapBetweenThumbs)
+            lValue = boundValue(lowerValue + deltaValue, toLowerValue: minimumValue, upperValue: upperValue - gapBetweenThumbs)
         } else if upperThumbLayer.highlighted {
-            upperValue = boundValue(upperValue + deltaValue, toLowerValue: lowerValue + gapBetweenThumbs, upperValue: maximumValue)
+            uValue = boundValue(upperValue + deltaValue, toLowerValue: lowerValue + gapBetweenThumbs, upperValue: maximumValue)
         }
+        if uValue - lValue >= 100 {
+            lowerThumbLayer.highlighted ? (lowerValue = lValue) : (upperValue = uValue)
+        }else{
+            lowerThumbLayer.highlighted ? (lowerValue = uValue - 100) : (upperValue = lValue + 100)
+        }
+        
+        
+        print(upperValue)
         
         sendActions(for: .valueChanged)
         
