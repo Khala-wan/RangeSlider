@@ -170,7 +170,7 @@ public class RangeSlider: UIControl {
         }
     }
     
-    var minSpcaeValue:Double = 100 {
+    public var minSpcaeValue:Double = 100 {
         didSet{
             gapBetweenThumbs = minSpcaeValue/(maximumValue - minimumValue) * Double(bounds.width)
         }
