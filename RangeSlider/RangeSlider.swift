@@ -260,8 +260,7 @@ public class RangeSlider: UIControl {
     }
     
     
-    // MARK: - Touches
-    
+// MARK: - Touches
     override public func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         previouslocation = touch.location(in: self)
         
@@ -271,6 +270,10 @@ public class RangeSlider: UIControl {
         } else if upperThumbLayer.frame.contains(previouslocation) {
             upperThumbLayer.highlighted = true
         }
+
+        
+        print("\(previouslocation)---\(lowerThumbLayer.frame)")
+        print(lowerThumbLayer.highlighted || upperThumbLayer.highlighted)
         
         return lowerThumbLayer.highlighted || upperThumbLayer.highlighted
     }
