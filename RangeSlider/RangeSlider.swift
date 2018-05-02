@@ -64,7 +64,6 @@ public class RangeSliderThumbLayer: CALayer {
         let thumbFrame = bounds.insetBy(dx: 2.0, dy: 2.0)
         let cornerRadius = thumbFrame.height * slider.curvaceousness / 2.0
         let thumbPath = UIBezierPath(roundedRect: thumbFrame, cornerRadius: cornerRadius)
-        
         // Fill
         ctx.setFillColor(slider.thumbTintColor.cgColor)
         ctx.addPath(thumbPath.cgPath)
@@ -234,16 +233,18 @@ public class RangeSlider: UIControl {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         let height:CGFloat = lineWidth ?? self.bounds.height/3
-        trackLayer.frame = CGRect(x: 0, y: (bounds.height - height) * 0.5, width: bounds.width, height: height)
+        trackLayer.frame = CGRect(x: 3, y: (bounds.height - height) * 0.5, width: bounds.width - 10, height: height)
         
         trackLayer.setNeedsDisplay()
         
         let lowerThumbCenter = CGFloat(positionForValue(lowerValue))
-        lowerThumbLayer.frame = CGRect(x: lowerThumbCenter - thumbWidth/2.0, y: 0.0, width: thumbWidth, height: thumbWidth)
+        let upperThumbCenter = CGFloat(positionForValue(upperValue))
+        
+        lowerThumbLayer.frame = CGRect(x: upperValue - lowerValue <= 100 && lowerThumbLayer.highlighted ? upperThumbCenter - thumbWidth/2.0 + 4 : lowerThumbCenter - thumbWidth/2.0, y: 0.0, width: thumbWidth, height: thumbWidth)
         lowerThumbLayer.setNeedsDisplay()
         
-        let upperThumbCenter = CGFloat(positionForValue(upperValue))
-        upperThumbLayer.frame = CGRect(x: upperThumbCenter + thumbWidth/2.0, y: 0.0, width: thumbWidth, height: thumbWidth)
+        
+        upperThumbLayer.frame = CGRect(x: upperValue - lowerValue <= 100 && upperThumbLayer.highlighted ? lowerThumbLayer.frame.maxX - 4 : upperThumbCenter + thumbWidth/2.0 - 4, y: 0.0, width: thumbWidth, height: thumbWidth)
         upperThumbLayer.setNeedsDisplay()
         
         CATransaction.commit()
@@ -279,7 +280,7 @@ public class RangeSlider: UIControl {
         
         // Determine by how much the user has dragged
         let deltaLocation = Double(location.x - previouslocation.x)
-        let deltaValue = (maximumValue - minimumValue) * deltaLocation / Double(bounds.width - bounds.height * 2.5)
+        let deltaValue = (maximumValue - minimumValue) * deltaLocation / Double(bounds.width - bounds.height * 2.5 - 10)
         previouslocation = location
         
         var lValue: Double = lowerValue
@@ -288,20 +289,12 @@ public class RangeSlider: UIControl {
         // Update the values
         if lowerThumbLayer.highlighted {
             lValue = boundValue(lowerValue + deltaValue, toLowerValue: minimumValue, upperValue: upperValue - gapBetweenThumbs)
+            uValue - lValue > 100 ? (lowerValue = lValue) : (lowerValue = uValue - 100)
         } else if upperThumbLayer.highlighted {
             uValue = boundValue(upperValue + deltaValue, toLowerValue: lowerValue + gapBetweenThumbs, upperValue: maximumValue)
+            uValue - lValue > 100 ? (upperValue = uValue) : (upperValue = lowerValue + 100)
         }
-        if uValue - lValue >= 100 {
-            lowerThumbLayer.highlighted ? (lowerValue = lValue) : (upperValue = uValue)
-        }else{
-            lowerThumbLayer.highlighted ? (lowerValue = uValue - 100) : (upperValue = lValue + 100)
-        }
-        
-        
-        print(upperValue)
-        
         sendActions(for: .valueChanged)
-        
         return true
     }
     
